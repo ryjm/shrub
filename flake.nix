@@ -1,75 +1,133 @@
 {
-  inputs = {
-    flake-utils.url = "github:numtide/flake-utils";
-    tools = {
-      flake = false;
-      url = "github:urbit/tools/d454e2482c3d4820d37db6d5625a6d40db975864";
-    };
-  };
+  description = "A flake for Urbit utilities.";
 
-  outputs = { self, nixpkgs, flake-utils, tools }:
+  inputs.flake-utils.url = "github:numtide/flake-utils";
+
+  outputs = { self, nixpkgs, flake-utils, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        usableTools = pkgs.runCommand "patched-tools" { } ''
-          cp -r ${tools} $out
-          chmod +w -R $out
-          patchShebangs $out
+        pkgs-new = import nixpkgs { inherit system; };
+        pkgs = nixpkgs.legacyPackages.${system};
+        isDarwin = system == "x86_64-darwin" || system == "aarch64-darwin";
+
+        extraInputs = if isDarwin then [
+          pkgs.darwin.apple_sdk.frameworks.Foundation
+          pkgs.libiconv
+        ] else
+          [ ];
+
+        exclude = pkgs.writeText "exclude-file" ''
+          ./
+          *.sh
+          *.md
+          *.txt
         '';
-        pkgs = import nixpkgs { inherit system; };
-        bootFakeShip = { pill, arvo }:
-          pkgs.runCommand "fake-pier" { } ''
-            ${./urbit} --pier $out -F zod -B ${pill} -l -x -t -A ${arvo}
-          '';
-        fakePier = bootFakeShip {
-          pill = ./bin/solid.pill;
-          arvo = "${./pkg}/arvo";
+
+        lensd = pkgs.writeShellScriptBin "lensd" ''
+          DESK_DIR=$piers/$pier/$project
+          PIER=$(dirname $DESK_DIR)
+          DESK=$(basename $DESK_DIR)
+
+          #!/usr/bin/env bash
+          port=$(cat $PIER/.http.ports | grep loopback | tr -s ' ' '\n' | head -n 1)
+          curl -s                                                              \
+            --data "{\"source\":{\"dojo\":\"$1\"},\"sink\":{\"stdout\":null}}" \
+            "http://localhost:$port" | xargs printf %s | sed 's/\\n/\n/g'
+        '';
+
+        lensa = pkgs.writeShellScriptBin "lensa" ''
+          #!/usr/bin/env bash
+          DESK_DIR=$piers/$pier/$project
+          PIER=$(dirname $DESK_DIR)
+          DESK=$(basename $DESK_DIR)
+          port=$(cat $PIER/.http.ports | grep loopback | tr -s ' ' '\n' | head -n 1)
+          curl -s                                                              \
+            --data "{\"source\":{\"dojo\":\"$2\"},\"sink\":{\"app\":\"$1\"}}" \
+            "http://localhost:$port" | xargs printf %s | sed 's/\\n/\n/g'
+        '';
+
+        watch-copy = pkgs.writeShellScriptBin "watch-copy" ''
+          #!/usr/bin/env bash
+          watchexec -w $desk copy
+        '';
+        watch-commit = pkgs.writeShellScriptBin "watch-commit" ''
+          #!/usr/bin/env bash
+          DESK_DIR=$piers/$pier/$project
+          PIER=$(dirname $DESK_DIR)
+          DESK=$(basename $DESK_DIR)
+          watchexec -w $DESK_DIR lensa 'hood' "\"+hood/commit %$project\""
+        '';
+        make-ship = pkgs.writeShellScriptBin "make-ship" ''
+          #!/usr/bin/env bash
+          urbit -F $1 -c $piers/$1
+          echo "Created $1 in $piers/$1"
+        '';
+
+        clean-deploy = pkgs.writeShellScriptBin "clean-deploy" ''
+          #!/usr/bin/env bash
+          # use argument for project, otherwise use default
+          if [ -z "$1" ] ; then project=$project ; else project=$1 ; fi
+          echo "deploying $project to $piers/$pier/$project"
+          # copy dir files to pier
+          echo "cleaning build dir"
+          make clean
+          echo "building"
+          make
+          make build
+          echo "cleaning $piers/$pier/$project"
+          rm -rf $piers/$pier/$project/*
+          echo "copying to $piers/$pier/$project"
+          cp -rf full-desk/* $piers/$pier/$project
+          lensa 'hood' "+hood/commit %$project"
+          lensa 'hood' "+hood/revive %$project"
+        '';
+
+        deploy = pkgs.writeShellScriptBin "deploy" ''
+          #!/usr/bin/env bash
+          # copy dir files to pier
+          make clean
+          make
+          make build
+          cp -rf full-desk/* $piers/$pier/$project
+        '';
+        copy = pkgs.writeShellScriptBin "copy" ''
+          #!/usr/bin/env bash
+          # copy dir files to pier
+          rsync -aL --delete --out-format="%i %n%L" $desk/ $piers/$pier/$project
+          # cp -rf $desk $piers/$1/$project
+        '';
+
+        fud = pkgs.writeShellScriptBin "fud" ''
+          #!/usr/bin/env bash
+          cd "$(dirname "$ (realpath "$1") ")"
+        '';
+        shell = pkgs.mkShell {
+          inherit exclude;
+
+          piers = "../";
+          project = "neo";
+          desk = "./pkg/shrub";
+          pier = "master-littel-wolfur";
+          SYSTEM = system;
+          buildInputs = with pkgs;
+            [
+              peru
+              deploy
+              fud
+              make-ship
+              # vere
+              copy
+              lensd
+              lensa
+              curl
+              rsync
+              clean-deploy
+              watch-copy
+              watch-commit
+            ] ++ extraInputs;
         };
-        testPier = bootFakeShip {
-          pill = ./bin/solid.pill;
-          arvo = pkgs.runCommand "test-arvo" {} ''
-            cp -r ${./pkg} $out
-            chmod +w -R $out
-            cp -r ${./tests} $out/arvo/tests
-            cp -r ${./test-desk.bill} $out/arvo/desk.bill
-          '' + "/arvo";
-        };
-        buildPillThread = pill:
-          pkgs.writeTextFile {
-            name = "";
-            text = ''
-              =/  m  (strand ,vase)
-              ;<  [=ship =desk =case]  bind:m  get-beak
-              ;<  ~  bind:m  (poke [ship %dojo] %lens-command !>([%$ [%dojo '+${pill}'] [%output-pill '${pill}/pill']]))
-              ;<  ~  bind:m  (poke [ship %hood] %drum-exit !>(~))
-              (pure:m !>(~))
-            '';
-          };
-        buildPill = pill:
-          pkgs.runCommand ("${pill}.pill") { buildInputs = [ pkgs.netcat ]; } ''
-            cp -r ${fakePier} pier
-            chmod +w -R pier
-            ${./urbit} -d pier
-            ${usableTools}/pkg/click/click -k -p -i ${buildPillThread pill} pier
-
-            # Sleep to let urbit spin down properly
-            sleep 5
-
-            cp pier/.urb/put/${pill}.pill $out
-          '';
-
       in {
-        checks = {
-          testFakeShip = import ./nix/test-fake-ship.nix {
-            inherit pkgs;
-            pier = testPier;
-            click = usableTools + "/pkg/click/click";
-          };
-        };
-        packages = {
-          inherit fakePier testPier;
-          brass = buildPill "brass";
-          ivory = buildPill "ivory";
-          solid = buildPill "solid";
-        };
+        packages = { inherit shell; };
+        defaultPackage = shell;
       });
 }

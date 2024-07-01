@@ -15,7 +15,7 @@
 /*  txt-ford-text   %hoon   /neo/cod/std/src/imp/ford-text/hoon
 =>
   |%
-  ++  dev  |
+  ++  dev  &
   ++  mute
     ?:  dev  same
     |*  *
@@ -2166,6 +2166,8 @@
     ?>  ?=([src=* hand=* ~] paxs)
     =/  src=pith  src.paxs
     =/  hand=pith  hand.paxs
+    ~&  take-peer/wir
+    ~&  take-peer/paxs
     ?~  cas=(~(get by clay.unix) [src hand])
       run
     =/  [case=@ud =peer:clay:neo]  u.cas
