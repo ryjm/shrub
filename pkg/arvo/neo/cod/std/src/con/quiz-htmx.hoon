@@ -120,16 +120,16 @@
           =style  "container-type: inline-size;"
           ;div.front.p1.fr.jb
             ;+
-            ~&  craw
+            ~&  craw/craw
             =|  newb=bowl:neo
             =/  render  render-quiz:ql
             =.  here.newb  here.bowl
             =.  bol.render  newb
             =/  rendered  (render craw)
-            ~&  >>  "rendered-quiz: {<rendered>}"
+            ::  ~&  >>  "rendered-quiz: {<rendered>}"
             =/  view  `rendered
             =/  new=quiz  q(view view)
-            ~&  >>  "new-quiz: {<new>}"
+            ::  ~&  >>  "new-quiz: {<new>}"
             =/  m  (render-quiz-content view.q & fore.q)
               m(a.g [[%class "prose"] a.g.m])
             ;div.fr.as.g2
@@ -138,18 +138,18 @@
           ==
           ;div.back.p1.fr.jb
             ;+
-            ~&  craw
+            ~&  craw/craw
             =|  newb=bowl:neo
             =/  render  render-quiz:ql
             =.  here.newb  here.bowl
             =.  bol.render  newb
             =/  rendered  (render craw)
-            ~&  >>  "rendered-quiz: {<rendered>}"
+            ::  ~&  >>  "rendered-quiz: {<rendered>}"
             =/  view  `rendered
             =/  new=quiz  q(view view)
-            ~&  >>  "new-quiz: {<new>}"
+            ::  ~&  >>  "new-quiz: {<new>}"
             =/  m  (render-quiz-content view.q | back.q)
-                m(a.g [[%class "prose"] a.g.m])
+              m(a.g [[%class "prose"] a.g.m])
             ;div.fr.as.g2
               ;span.p1.fr.je.mono.bd1.br2.b-3: back
             ==
@@ -161,16 +161,15 @@
 ++  render-quiz-content
   |=  [=view:quiz is-front=? fallback=@t]
   ^-  manx
-  ~&  >>  "rendering: {<view>}"
+  ::  ~&  >>  "rendering: {<view>}"
   ?~  view
     ;div: {(trip fallback)}
   ?-  -.u.view
       %.y
-    ~&  >>  "view: {<p.p.u.view>}"
-    ~&  >>  "view: {<q.p.u.view>}"
+    ::  ~&  >>  "view: {<p.p.u.view>}"
+    ::  ~&  >>  "view: {<q.p.u.view>}"
     ?:(is-front p.p.u.view q.p.u.view)
       %.n
-
     ~&  >>  "quiz error: {<q>}"
     ~&  >>  "quiz error: {<p.u.view>}"
     =-  ~&  >>  -  -

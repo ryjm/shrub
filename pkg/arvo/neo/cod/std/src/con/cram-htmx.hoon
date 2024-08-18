@@ -203,8 +203,8 @@
       =morph-retain   "class"
       =hx-trigger  "cram-change"
       =head  "exam"
-      =current-id  "{<q.pole>}"
       =current  "{<e.pole>}"
+      =current-id  "{<q.pole>}"
       ;+  %^  add-attr  %onclick
           """
           $(this).emit('cram-change');
@@ -380,7 +380,8 @@
       cards.addClass('hidden');
       cards.eq(newIndex).removeClass('hidden');
       deck.attr('current', cards.eq(newIndex).attr('exam'));
-      deck.find('.cram-counter').text(`${newIndex + 1}/${cards.length}`);
+      deck.attr('current-id', cards.eq(newIndex).attr('id'));
+      deck.find('.cram-counter').text(`${newIndex}/${cards.length}`);
       triggerCardSave(deck[0]);
     }
     function cramDelete(deck) {
@@ -391,7 +392,8 @@
       cards.addClass('hidden');
       cards.eq(newIndex).removeClass('hidden');
       deck.attr('current', cards.eq(newIndex).attr('exam'));
-      deck.find('.cram-counter').text(`${newIndex + 1}/${cards.length}`);
+      deck.attr('current-id', cards.eq(newIndex).attr('id'));
+      deck.find('.cram-counter').text(`${newIndex}/${cards.length}`);
       triggerCardDelete(deck);
     }
     function cramNext(deck) {
@@ -402,7 +404,8 @@
       cards.addClass('hidden');
       cards.eq(newIndex).removeClass('hidden');
       deck.attr('current', cards.eq(newIndex).attr('exam'));
-      deck.find('.cram-counter').text(`${newIndex + 1}/${cards.length}`);
+      deck.attr('current-id', cards.eq(newIndex).attr('id'));
+      deck.find('.cram-counter').text(`${newIndex}/${cards.length}`);
       triggerCardSave(deck[0]);
     }
     function triggerCardSave(that) {

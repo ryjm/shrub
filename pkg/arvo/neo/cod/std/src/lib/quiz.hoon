@@ -14,7 +14,7 @@
   =/  parts  (split card "---")
   ?~  parts  ["" ""]
   ?~  t.parts  [i.parts ""]
-  [i.parts (welp "---" (zing t.parts))]
+  [i.parts (zing t.parts)]
 ::
 ++  make-all
   |=  craw=tape
@@ -37,10 +37,11 @@
 |=  =tang
 ^-  manx
 ;div.pre.mono.p2
-  ;*
-  %+  turn  (scag 25 tang)
+  ;*  %+  turn  (scag 25 tang)
   |=  =tank
-  ;span: {(of-wall:format (~(win re tank) 0 80))}
+  ;span
+    {(of-wall:format (~(win re tank) 0 80))}
+  ==
 ==
 ++  make-quiz
   |=  [fore=tape back=tape]
@@ -116,10 +117,12 @@
       %+  with-faces:ford:neo  (slop !>(neo) !>(..zuse))
       :~
         :: htmx/!>(htmx)
+        neo/!>(neo)
         bowl/!>(bol)
         feather-icons/!>(feather-icons)
       ==
     (ream udon)
+  ~&  >  render-quiz/-.mul
   ?-  -.mul
     %.y  `show:quiz`[%.y `[manx manx]`(split-quiz (manx p.mul))]
     %.n  [%.n (tang p.mul)]

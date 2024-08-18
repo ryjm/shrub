@@ -16,9 +16,11 @@
   ^-  form:neo
   |_  [=bowl:neo =aeon:neo =pail:neo]
   ++  init
-    |=  old=(unit pail:neo)
+    |=  pil=(unit pail:neo)
     ^-  (quip card:neo pail:neo)
     %-  some
+    ?^  pil
+      u.pil
     =;  quiz  
       ~&  >>  init/fore.quiz  
       quiz/!>(quiz)
@@ -35,12 +37,13 @@
         *quiz
       u.res
     ~&  bowl/bowl
+    ~&  state/state
     ?:  =(%quiz stud)
       %-  some
       ?~  res=(mole |.(!<(quiz vax)))
         %-  (slog leaf/"failed" (sell vax) ~)
         ~&  >>  %poke-failed
-        quiz/q.pail
+        quiz/!>(state)
       ~&  >>  poke/u.res
       quiz/!>(u.res)
     ?>  =(%quiz-diff stud)

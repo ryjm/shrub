@@ -564,6 +564,20 @@
 ::
 ::    contains arms using for printing doccords items
 +|  %printing
+::
+++  show-this
+  |=  [terms=(list term) sut=type]
+  ^-  tang
+  =/  it=(unit item)  (find-item-in-type terms sut)
+  ?^  it  (show-item u.it)
+  ~[leaf+"could not find terms in type"]
+::
+++  show-item
+  |=  =item
+  ^-  tang
+  %-  as-tang
+  (print-item item)
+::
 ::  +print-item: prints a doccords item
 ++  print-item
   |=  =item
@@ -635,11 +649,11 @@
   |=  =tank
   ^-  (list sole-effect)
   =/  tan  (wash [3 80] tank)
-  ?.  (gte (lent tan) 3)
+  ::  ?.  (gte (lent tan) 3)
     (turn tan |=(a=tape [%txt a]))
-  %+  weld
-    (turn (scag 3 tan) |=(a=tape [%txt a]))
-  (styled [[`%br ~ `%g] '   ...']~)
+  ::  %+  weld
+  ::    (turn (scag 3 tan) |=(a=tape [%txt a]))
+  ::  (styled [[`%br ~ `%g] '']~)
 ::
 ::  +print-arm: renders documentation for a single arm in a core
 ++  print-arm
@@ -779,4 +793,75 @@
     in   t.in
     out  (snoc out [%klr eff])
   ==
+++  as-tang
+  |=  effects=(list sole-effect)
+  ^-  tang
+  %+  turn  effects
+  |=  effect=sole-effect
+  ^-  tank
+  ?+  -.effect  leaf+""
+    %bel  leaf+"\07"
+    %blk  leaf+""
+    %bye  leaf+"Closing session\0a"
+    ::  %clr  "\033[2J\033[H"
+    %err  leaf+"Error at {<p.effect>}\0a"
+    %klr  leaf+(klr-to-tape p.effect)
+    %mor  rose/[[" " ~ ~] (as-tang p.effect)]
+    %tab  leaf+(tab-to-tape p.effect)
+    %tan  rose/[[" " ~ ~] p.effect]
+    %txt  leaf+p.effect
+    %url  leaf+"URL: {(trip p.effect)}\0a"
+  ==
+
+++  klr-to-tape
+  |=  stx=styx
+  ^-  tape
+  %-  zing
+  %+  turn  stx
+  |=  ele=$@(@t (pair styl styx))
+  ?@  ele
+    (trip ele)
+  (klr-to-tape q.ele)
+
+++  tab-to-tape
+  |=  tabs=(list [=cord =tank])
+  ^-  tape
+  %-  zing
+  %+  turn  tabs
+  |=  [=cord =tank]
+  "{(trip cord)}: {(tank-to-tape tank)}"
+
+++  tanks-to-tape
+  |=  tanks=(list tank)
+  ^-  (list tape)
+  %+  turn  tanks
+  |=  =tank
+  (tank-to-tape tank)
+
+++  tank-to-tape
+  |=  =tank
+  ^-  tape
+  (of-wall:format (~(win re tank) 0 55))
+  ::  ?@  tank  (trip tank)
+  ::  ?-  -.tank
+  ::    %leaf  p.tank
+  ::    %palm
+  ::      %-  zing
+  ::      ^-  (list tape)
+  ::      :~  "("
+  ::          (zing `(list tape)`[p q r s ~]:p.tank)
+  ::          " "
+  ::          (tanks-to-tape q.tank)
+  ::          ")"
+  ::      ==
+  ::    %rose
+  ::      %-  zing
+  ::      ^-  (list tape)
+  ::      :~
+  ::          `tape`(zing `(list tape)`[p q r ~]:p.tank)
+  ::          "["
+  ::          (tanks-to-tape q.tank)
+  ::          "]"
+  ::      ==
+  ::  ==
 --

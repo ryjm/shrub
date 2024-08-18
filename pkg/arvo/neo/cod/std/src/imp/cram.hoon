@@ -1,6 +1,6 @@
-/@  quiz         ::  [fore=t@t back=@t =mode =view]
-/@  cram         ::  [craw=@t clas=@t exam=@da]
-/@  cram-diff    ::  ?([%sync craw=@t] [%mode =mode] [%exam current=@da] [%quiz =quiz])
+/@  quiz
+/@  cram
+/@  cram-diff
 /-  ql=quiz
 ::
 ^-  kook:neo
@@ -217,12 +217,17 @@
       =/  rendered  (render craw.act) 
       ~&  >>  "rendered: {<rendered>}"
       ?-    -.rendered
-        %.n  `cram/!>(state(craw craw.act))
+          %.n
+         ~&  >>>  "failed to render"
+        `cram/!>(state(craw craw.act))
+        ::
           %.y
         =/  all  (make-all:ql (trip craw.act))
         =/  cards=(list card:neo)
           ?-    -.all
-            %.n  ~
+              %.n
+            ~&  >>>  "failed to make all"
+            ~
               %.y
             =;  res  -.res
             %+  roll  p.all
@@ -231,6 +236,7 @@
             =/  =pith:neo
               %+  welp  here.bowl
               #/exam/[ud/exam.state]/quiz/[ud/sub]
+            ~&  >  "making quiz: {<pith>}"
             =/  card  [pith [%make %quiz `quiz/!>(quiz) ~]]
             :_  +(sub)
             [card cards]

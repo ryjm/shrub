@@ -3,10 +3,9 @@
 /-  manx-utils
 /-  ql=quiz
 :-  [%node %$ %quiz]
-|=  =bowl:neo
 |=  nod=node
 ^-  quiz
-~&  >>  nod
+~&  >>>  node/nod
 =/  mu  ~(. manx-utils nod)
 =/  fore  (vol:mu "fore")
 ~&  >>  node/fore

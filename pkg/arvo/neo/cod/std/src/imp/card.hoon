@@ -13,19 +13,21 @@
     |=  old=(unit pail:neo)
     ^-  (quip card:neo pail:neo)
     ?^  old  
-      =+  !<(=card q.u.old)
-      :_  u.old
-      :_  ~
-      :-  (welp here:bowl ~)
-      [%poke card/!>(card)]
-    `pail
+      ::  =+  !<(=card q.u.old)
+      ::  :_  u.old
+      ::  :_  ~
+      ::  :-  (welp here:bowl ~)
+      ::  ~&  init/card
+      `card/q.u.old
+    `card/!>(*card)
   ++  poke
     |=  [=stud:neo vax=vase]
     ^-  (quip card:neo pail:neo)
     =/  state  !<(card q.pail)
     ?>  =(our ship.src):bowl
     ?:  =(%card stud)
-      `card/vax
+      ~&  poke/!<(card vax)
+      `card/!>(!<(card vax))
     ?>  =(%card-diff stud)
     =/  act    !<(card-diff vax)
     ?-    -.act

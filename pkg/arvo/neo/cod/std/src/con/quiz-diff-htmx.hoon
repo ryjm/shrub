@@ -6,7 +6,7 @@
 ^-  manx
 ~&  >>  flash/diff
 ;div.loading
-  =hx-get  "/neo/sky"
+  =hx-get  "/hawk{(en-tape:pith:neo here.bowl)}"
   =hx-params  "none"
   =hx-indicator  "closest .loader"
   =hx-target  "#air"
