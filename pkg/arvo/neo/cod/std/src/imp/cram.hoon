@@ -213,7 +213,7 @@
       =|  newb=bowl:neo
       =/  render  render-quiz:ql
       =.  here.newb  here.bowl
-      =.  bol.render  newb
+      =.  bol.render  bowl
       =/  rendered  (render craw.act) 
       ~&  >>  "rendered: {<rendered>}"
       ?-    -.rendered

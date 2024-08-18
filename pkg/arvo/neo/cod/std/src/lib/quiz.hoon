@@ -2,6 +2,7 @@
 /-  html-utils
 /-  manx-utils
 /-  feather-icons
+/>  htmx
 |%
 ++  spit-all
   |=  craw=tape
@@ -116,15 +117,14 @@
     %+  slap
       %+  with-faces:ford:neo  (slop !>(neo) !>(..zuse))
       :~
-        :: htmx/!>(htmx)
+        htmx/!>(htmx)
         neo/!>(neo)
         bowl/!>(bol)
         feather-icons/!>(feather-icons)
       ==
     (ream udon)
-  ~&  >  render-quiz/-.mul
   ?-  -.mul
-    %.y  `show:quiz`[%.y `[manx manx]`(split-quiz (manx p.mul))]
+    %.y  [%.y (split-quiz (manx p.mul))]
     %.n  [%.n (tang p.mul)]
   ==
 ::

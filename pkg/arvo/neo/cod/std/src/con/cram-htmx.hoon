@@ -222,7 +222,7 @@
   =.  here.kid  (welp here.bowl pax)
   =.  deps.kid  ~
   ;div.basis-half.shrink-0.grow.bd1
-    =style  "min-width: 350px; min-height: 150px;"
+    =style  "min-width: 80px; min-height: 55px;"
     ;+
     ?~  res=(~(get of:neo kids.bowl) pax)
       ;div: none - quiz {<[exam id]>}
@@ -270,9 +270,9 @@
         =exam  exam
         =id    id
         ;a
-          =style  "container-type: inline-size;"
+          =style  "container-type: inline-size; max-height: 300px;"
           =href   "/hawk{(en-tape:pith:neo here.bowl)}{(en-tape:pith:neo pith)}"
-          ;div.front.p1.fr.jb
+          ;div.front.p1.fr.jb.scroll-x.scroll-y
             ;+  =/  m  (render-quiz-content view.quiz & fore.quiz)
                 m(a.g [[%class (trip clas.cram)] a.g.m])
             ;div.fr.as.g2
@@ -280,8 +280,8 @@
               ;span.p1.fr.je.mono.bd1.br2.b-1: front
             ==
           ==
-          ;div.back.p1.fr.jb
-            =style  "container-type: inline-size;"
+          ;div.back.p1.fr.jb.scroll-x.scroll-y
+            =style  "container-type: inline-size; max-height: 300px;"
             ;+  =/  m  (render-quiz-content view.quiz | back.quiz)
                 m(a.g [[%class (trip clas.cram)] a.g.m])
             ;div.fr.as.g2
@@ -343,10 +343,10 @@
         =exam  exam
         =id    id
         =class  "{?:(=(exam.cram (slaw %ud (crip exam))) "" "hidden")}"
-        ;div.card-content
+        ;div.card-content.scroll-x.scroll-y
           ;div.card-side.fr.jb.front
             =style  "container-type: inline-size;"
-            ;div.card-body
+            ;div.card-body.scroll-x.scroll-y
             ;+  =/  m  (render-quiz-content view.quiz & fore.quiz)
                 m(a.g [[%class (trip clas.cram)] a.g.m])
             ==
@@ -356,7 +356,7 @@
           ==
           ;div.card-side.fr.jb.back.hidden
             =style  "container-type: inline-size;"
-            ;div.card-body
+            ;div.card-body.scroll-x.scroll-y
             ;+  =/  m  (render-quiz-content view.quiz | back.quiz)
                 m(a.g [[%class (trip clas.cram)] a.g.m])
             ==
@@ -468,7 +468,7 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       width: 100%;
       max-width: 600px;
-      overflow: hidden;
+      max-height: 400px;
     }
     .card-side {
       padding: 30px;

@@ -567,10 +567,25 @@
 ::
 ++  show-this
   |=  [terms=(list term) sut=type]
+  ^-  tape
+  ~&  show-this/terms
+  %-  of-wall:format
+  (show-wall terms sut)
+::
+++  show-tang
+  |=  [terms=(list term) sut=type]
   ^-  tang
   =/  it=(unit item)  (find-item-in-type terms sut)
   ?^  it  (show-item u.it)
   ~[leaf+"could not find terms in type"]
+::
+++  show-wall
+  |=  [terms=(list term) sut=type]
+  ^-  wall
+  %-  zing
+  %+  turn  (show-tang terms sut)
+  |=  =tank
+  (~(win re tank) 0 55)
 ::
 ++  show-item
   |=  =item
@@ -793,6 +808,7 @@
     in   t.in
     out  (snoc out [%klr eff])
   ==
+::
 ++  as-tang
   |=  effects=(list sole-effect)
   ^-  tang
@@ -803,7 +819,6 @@
     %bel  leaf+"\07"
     %blk  leaf+""
     %bye  leaf+"Closing session\0a"
-    ::  %clr  "\033[2J\033[H"
     %err  leaf+"Error at {<p.effect>}\0a"
     %klr  leaf+(klr-to-tape p.effect)
     %mor  rose/[[" " ~ ~] (as-tang p.effect)]
@@ -812,7 +827,7 @@
     %txt  leaf+p.effect
     %url  leaf+"URL: {(trip p.effect)}\0a"
   ==
-
+::
 ++  klr-to-tape
   |=  stx=styx
   ^-  tape
@@ -822,7 +837,7 @@
   ?@  ele
     (trip ele)
   (klr-to-tape q.ele)
-
+::
 ++  tab-to-tape
   |=  tabs=(list [=cord =tank])
   ^-  tape
@@ -830,38 +845,9 @@
   %+  turn  tabs
   |=  [=cord =tank]
   "{(trip cord)}: {(tank-to-tape tank)}"
-
-++  tanks-to-tape
-  |=  tanks=(list tank)
-  ^-  (list tape)
-  %+  turn  tanks
-  |=  =tank
-  (tank-to-tape tank)
-
+::
 ++  tank-to-tape
   |=  =tank
   ^-  tape
   (of-wall:format (~(win re tank) 0 55))
-  ::  ?@  tank  (trip tank)
-  ::  ?-  -.tank
-  ::    %leaf  p.tank
-  ::    %palm
-  ::      %-  zing
-  ::      ^-  (list tape)
-  ::      :~  "("
-  ::          (zing `(list tape)`[p q r s ~]:p.tank)
-  ::          " "
-  ::          (tanks-to-tape q.tank)
-  ::          ")"
-  ::      ==
-  ::    %rose
-  ::      %-  zing
-  ::      ^-  (list tape)
-  ::      :~
-  ::          `tape`(zing `(list tape)`[p q r ~]:p.tank)
-  ::          "["
-  ::          (tanks-to-tape q.tank)
-  ::          "]"
-  ::      ==
-  ::  ==
 --

@@ -6,7 +6,7 @@
 |=  =bowl:neo
 |^
   ^-  manx
-  ;div.quiz.fc.relative.wf.hf
+  ;div.quiz.fc.relative.wf.hf.p2
     ;+  controls
     ;div.frw.js.af.scroll-y.hf
       ;+  editor
@@ -120,16 +120,11 @@
           =style  "container-type: inline-size;"
           ;div.front.p1.fr.jb
             ;+
-            ~&  craw/craw
-            =|  newb=bowl:neo
             =/  render  render-quiz:ql
-            =.  here.newb  here.bowl
-            =.  bol.render  newb
+            =.  bol.render  bowl
             =/  rendered  (render craw)
-            ::  ~&  >>  "rendered-quiz: {<rendered>}"
             =/  view  `rendered
             =/  new=quiz  q(view view)
-            ::  ~&  >>  "new-quiz: {<new>}"
             =/  m  (render-quiz-content view.q & fore.q)
               m(a.g [[%class "prose"] a.g.m])
             ;div.fr.as.g2
@@ -138,16 +133,11 @@
           ==
           ;div.back.p1.fr.jb
             ;+
-            ~&  craw/craw
-            =|  newb=bowl:neo
             =/  render  render-quiz:ql
-            =.  here.newb  here.bowl
-            =.  bol.render  newb
+            =.  bol.render  bowl
             =/  rendered  (render craw)
-            ::  ~&  >>  "rendered-quiz: {<rendered>}"
             =/  view  `rendered
             =/  new=quiz  q(view view)
-            ::  ~&  >>  "new-quiz: {<new>}"
             =/  m  (render-quiz-content view.q | back.q)
               m(a.g [[%class "prose"] a.g.m])
             ;div.fr.as.g2
@@ -161,18 +151,12 @@
 ++  render-quiz-content
   |=  [=view:quiz is-front=? fallback=@t]
   ^-  manx
-  ::  ~&  >>  "rendering: {<view>}"
   ?~  view
     ;div: {(trip fallback)}
   ?-  -.u.view
       %.y
-    ::  ~&  >>  "view: {<p.p.u.view>}"
-    ::  ~&  >>  "view: {<q.p.u.view>}"
     ?:(is-front p.p.u.view q.p.u.view)
       %.n
-    ~&  >>  "quiz error: {<q>}"
-    ~&  >>  "quiz error: {<p.u.view>}"
-    =-  ~&  >>  -  -
     (error:ql p.u.view)
   ==
 ++  script
@@ -199,8 +183,7 @@
   '''
     .quiz {
       overflow-y: auto;
-      padding: 4cqw 6cqw;
-      font-size: 2.4cqw;
+      overflow-x: auto;
     }
   '''
   ==

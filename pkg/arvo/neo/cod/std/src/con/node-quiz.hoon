@@ -5,10 +5,8 @@
 :-  [%node %$ %quiz]
 |=  nod=node
 ^-  quiz
-~&  >>>  node/nod
 =/  mu  ~(. manx-utils nod)
 =/  fore  (vol:mu "fore")
-~&  >>  node/fore
 =/  back  (vol:mu "back")
 ::  =/  mode
 ::    %+  snag  0
@@ -20,10 +18,8 @@
 ::    :-  ~
 ::    ;;  mode:quiz
 ::    (crip (~(got by ribs) %mode))
-~&  >>  node/back
 =/  res  (make-quiz:ql (trip fore) (trip back))
  %-  (slog leaf/"built" (sell !>(p.res)) ~)
-~&  >>  node/res
 ?-    -.res
     %.y
   `quiz`p.res
