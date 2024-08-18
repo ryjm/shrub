@@ -46,11 +46,17 @@
             ~
         ==
       ~&  req/request
-      =/  =req:iris:neo  [#/cards/[query]/[da/now.bowl] request]
+      =/  =req:iris:neo  [#/cards/1/[da/now.bowl] request]
       :_  magic/!>(state(fetching &))
       [#/[p/our.bowl]/$/iris %poke iris-req/!>(req)]~
       ::
         %iris-res
+      =/  kids
+        %+  murn
+        ~(tap of:neo kids.bowl)
+        |=  [=(pole iota) =idea:neo]
+        %-  mole  |.(!<(card q.pail.idea))
+      ~&  >>  kids/kids
       =+  !<(=res:iris:neo vax)
       ?.  ?=(%finished -.dat.res)
         `pail
@@ -66,6 +72,7 @@
       :_  magic/!>([| (welp cards.state +.u.res)])
       %+  turn  +.u.res
       |=  car=card
+      ~&  >>  card/car
       :-  (welp here.bowl (en-pith:card car))
       [%make %card `card/!>(car) ~]
       ==
